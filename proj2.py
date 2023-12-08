@@ -1,5 +1,6 @@
 import os
 import argparse
+import sys
 
 def search_directory(directory, criteria):
     results = []
@@ -8,15 +9,11 @@ def search_directory(directory, criteria):
         for file_name in files:
             file_path = os.path.join(root, file_name)
 
-            # Check if the file name contains the specified criteria
             if criteria['name'] and criteria['name'] not in file_name:
                 continue
-
-            # Check if the file extension matches the specified criteria
+                
             if criteria['extension'] and not file_name.endswith(criteria['extension']):
                 continue
-
-            # Check if the file size is within the specified range
             file_size = os.path.getsize(file_path)
             if criteria['min_size'] and file_size < criteria['min_size']:
                 continue
@@ -44,7 +41,9 @@ def main():
     }
 
     if not any(criteria.values()):
-        print(any(criteria.values()))
+        print("no search criteria provided")
+        parser.print_help()
+        sys.exit(1)
 
     results = search_directory(args.directory, criteria)
 
